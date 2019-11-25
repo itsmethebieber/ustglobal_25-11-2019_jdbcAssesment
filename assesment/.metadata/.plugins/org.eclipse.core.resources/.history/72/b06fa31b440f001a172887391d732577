@@ -1,0 +1,26 @@
+package com.ustglobal.phoneapp.dao;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
+public class PhoneDAO {
+	String url="jdbc:mysql://localhost:3306/contactFile";
+	String sql="select * from contact";
+	public void showAll() {
+
+		try{
+			Class.forName("com.mysql.jdbc.Driver");
+			try(Connection con=DriverManager.getConnection(url);
+					Statement st=con.createStatement();
+					ResultSet rs=st.executeQuery(sql)) {
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+}

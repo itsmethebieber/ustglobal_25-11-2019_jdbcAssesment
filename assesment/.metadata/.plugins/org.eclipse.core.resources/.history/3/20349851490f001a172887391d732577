@@ -1,0 +1,77 @@
+package com.ustglobal.phoneapp.dao;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.Scanner;
+
+
+public class PhoneDAOImpl {
+	String url="jdbc:mysql://localhost:3306/contactFile";
+	String showSql="select * from contact";
+	String searchSql="select * from contact where name=?";
+	public void showAll() {
+
+		try{
+			Class.forName("com.mysql.jdbc.Driver");
+			try(Connection con=DriverManager.getConnection(url, "root", "");
+					Statement st=con.createStatement();
+					ResultSet rs=st.executeQuery(showSql)) {
+					while (rs.next()) {
+						System.out.println("Name="+rs.getString("name"));
+						System.out.println("Number="+rs.getInt("number"));
+						System.out.println("Groups="+rs.getString("groups"));
+					}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	public void search(String name) {
+		try{
+			Class.forName("com.mysql.jdbc.Driver");
+			try(Connection con=DriverManager.getConnection(url, "root", "");
+					PreparedStatement st=con.prepareStatement("searchSql") ){
+					st.setString(1, name);					
+					try(ResultSet rs=st.executeQuery()) {
+						Scanner sc=new Scanner(System.in);
+						if(rs.next()) {
+							String name1=rs.getString("name");
+							System.out.println("press 1 to call "+name1);
+							System.out.println("press 2 to message "+name1);
+							System.out.println("press 3 to go back main menu");
+							int i=sc.nextInt();
+							switch (i) {
+							case 1:
+								System.out.println("calling to "+name);
+								System.out.println("press any key to end call");
+								try {
+									System.in.read();
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+								break;
+
+							default:
+								break;
+							}
+						}else {
+							System.out.println("name not found");
+						}
+					} catch (Exception e) {
+
+						e.printStackTrace();
+					}
+				
+					}catch (Exception e) {
+						e.printStackTrace();
+					}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+}
